@@ -19,13 +19,13 @@ const BenefitsSection = () => {
         <div className="bg-slate-100 rounded-xl p-16 shadow-lg flex items-center justify-center">
           <div className="w-full relative">
             <img 
-              src="/image/calendar.png" 
+              src="/optimuscalendar.png" 
               className="w-full h-auto object-contain rounded-lg"
               alt="Calendar"
             />
             <div className="absolute bottom-[-40px] right-[-20px] w-96">
               <img 
-                src="/image/lapsereport.png" 
+                src="/optimuslapsereport.png" 
                 className="w-full h-auto object-contain rounded-lg shadow-lg"
                 alt="Secondary Calendar"
               />
