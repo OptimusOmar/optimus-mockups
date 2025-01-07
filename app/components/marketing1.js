@@ -1,20 +1,18 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { Star, HelpCircle, MessageSquare, BarChart3, TruckIcon, CloudDownloadIcon } from "lucide-react";
-import { GrDocumentMissing, GrDocumentNotes, GrDocumentVerified } from "react-icons/gr";
-import { FaTruckMoving } from "react-icons/fa6";
-import { MdSentimentSatisfied } from "react-icons/md";
+import React, { useState } from 'react';
+import { Star, BarChart3, TruckIcon, CloudDownloadIcon } from 'lucide-react';
+import { GrDocumentVerified } from 'react-icons/gr';
 
 const ManufacturingLanding = () => {
-    // Add form state
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        fleetSize: "",
-        challenge: "",
-        currentMethod: "",
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        company: '',
+        fleetSize: '',
+        challenge: '',
+        currentMethod: '',
     });
 
     const handleChange = (e) => {
@@ -24,57 +22,53 @@ const ManufacturingLanding = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
-        // Add your form submission logic here
+        try {
+            const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    service_id: 'service_bd8xqoi',
+                    template_id: 'template_gdv4gzz',
+                    user_id: 'moxGesNsHlG4mbFyg',
+                    template_params: {
+                        to_email: 'omar@optimuspaper.com',
+                        from_name: `${formData.firstName} ${formData.lastName}`,
+                        from_email: formData.email,
+                        message: JSON.stringify(formData, null, 2)
+                    }
+                })
+            });
+            
+            if (response.ok) {
+                alert('Form submitted successfully!');
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    company: '',
+                    fleetSize: '',
+                    challenge: '',
+                    currentMethod: '',
+                });
+            } else {
+                throw new Error('Failed to submit form');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to submit form. Please try again.');
+        }
     };
 
     return (
         <div className="min-h-screen bg-white">
-            {/* Navigation */}
-            {/* <nav className="flex items-center justify-between px-6 py-4 bg-sky-400">
-        <div className="flex items-center">
-          <span className="ml-2 font-semibold text-white">Optimus Paper</span>
-        </div>
-        
-        <div className="hidden md:flex space-x-6 text-sm">
-          <a href="#" className="text-white hover:text-blue-900">Benefits</a>
-          <a href="#" className="text-white hover:text-blue-900">Pricing</a>
-          <a href="#" className="text-white hover:text-blue-900">Contact Us</a>
-          <a href="#" className="text-white hover:text-blue-900">Blog</a>
-          <a href="#" className="text-white hover:text-blue-900">Login</a>
-        </div>
-        
-        <button className="bg-green-400 text-white px-4 py-2 pt-2.5 text-sm hover:bg-green-600">
-          Sign Up
-        </button>
-      </nav> */}
-
             {/* Hero Section */}
-            <main className="container mx-auto px-6 pt-16 pb-24 relative">
-                {/* Left floating icons */}
-                <div className="absolute left-10 top-[22rem] -translate-y-1/2 space-y-4">
-                    <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center shadow-lg">
-                        <TruckIcon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="w-10 h-10 bg-white rounded-full border-2 border-blue-900 flex items-center justify-center shadow-lg absolute bottom-12 left-16">
-                        <GrDocumentVerified className="w-5 h-5 text-gray-600" />
-                    </div>
-                    <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center shadow-lg">
-                        <CloudDownloadIcon className="w-5 h-5 text-white" />
-                    </div>
-                </div>
-
-                {/* Right floating icons */}
-                <div className="absolute right-10 top-[22rem] -translate-y-1/2 flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center shadow-lg absolute top-8 right-12">
-                        <BarChart3 className="w-5 h-5 text-black" />
-                    </div>
-                    <div className="w-3 h-12 bg-blue-900 rounded-full"></div>
-                </div>
-
-                <div className="text-center max-w-3xl mx-auto">
+            <main className="container mx-auto px-6 pt-16 pb-24">
+                <div className="text-center max-w-3xl mx-auto mb-24">
                     <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-6">
                         Your Trusted Partner in DOT Compliance
                     </h1>
@@ -83,73 +77,92 @@ const ManufacturingLanding = () => {
                     </p>
 
                     <div className="flex justify-center gap-4 mb-12">
-                        <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 border-none">
+                        <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
                             Get Started
                         </button>
-                        <button className="bg-white border border-blue-200 text-blue-800 px-6 py-3 rounded-lg hover:border-blue-500">
+                        <button className="bg-white text-blue-800 px-6 py-3 rounded-lg hover:border-blue-500 border border-blue-200">
                             Try Demo
                         </button>
                     </div>
 
-                    {/* Rating */}
-                    <div className="flex justify-center items-center gap-1 mb-16">
+                    <div className="flex justify-center items-center gap-1">
                         {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                                key={star}
-                                className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                            />
+                            <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                         ))}
                         <span className="ml-2 text-blue-800">5.0</span>
-                        <span className="text-blue-600 text-sm ml-2">
-                            from 85+ reviews
-                        </span>
+                        <span className="text-blue-600 text-sm ml-2">from 85+ reviews</span>
                     </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
-                    {/* Manufacturing Image */}
-                    <div className="rounded-2xl overflow-hidden">
-                        <img
-                            src="/image/truck.webp"
-                            alt="Manufacturing pipes"
-                            className="w-full object-cover h-[30rem]"
-                        />
-                    </div>
+                {/* Stats Grid with Updated Design */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Left Side Features */}
+                    <div className="space-y-8">
+                        {/* Hero Image */}
+                        <div className="relative h-64 rounded-2xl overflow-hidden mb-8">
+                            <img 
+                                src={`${window.assetUrl}image/truck.webp`} 
+                                alt="Truck Fleet Management"
+                                className="object-cover w-full h-full"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/70 to-transparent flex items-end">
+                                <div className="p-6 text-white">
+                                    <h3 className="text-2xl font-bold mb-2">Modern Fleet Solutions</h3>
+                                    <p className="text-white/90">Streamlined compliance for your entire fleet</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl">
+                            <div className="flex items-start gap-4">
+                                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                                    <TruckIcon className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-semibold text-blue-900 mb-2">Fleet Management</h3>
+                                    <p className="text-blue-700">Streamline your operations with our integrated fleet management solutions</p>
+                                </div>
+                            </div>
+                        </div>
 
-                    {/* Manufacturing Image */}
-                    <div className="rounded-2xl overflow-hidden">
-                        <img
-                            src="/image/truckgg.webp"
-                            alt="Manufacturing pipes"
-                            className="w-full object-cover h-[24rem]"
-                        />
-                    </div>
+                        <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-2xl">
+                            <div className="flex items-start gap-4">
+                                <div className="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center">
+                                    <GrDocumentVerified className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-semibold text-indigo-900 mb-2">Compliance Tracking</h3>
+                                    <p className="text-indigo-700">Stay ahead with automated compliance monitoring and alerts</p>
+                                </div>
+                            </div>
+                        </div>
 
-                    {/* Manufacturing Image */}
-                    <div className="rounded-2xl overflow-hidden">
-                        <img
-                            src="/image/truckgg.webp"
-                            alt="Manufacturing pipes"
-                            className="w-full object-cover h-[30rem]"
-                        />
+                        <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-8 rounded-2xl">
+                            <div className="flex items-start gap-4">
+                                <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center">
+                                    <BarChart3 className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-semibold text-cyan-900 mb-2">Analytics Dashboard</h3>
+                                    <p className="text-cyan-700">Make data-driven decisions with comprehensive analytics</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Contact Form */}
-                    <div className="bg-slate-50 rounded-xl shadow-lg p-8 col-span-2">
-                        <h3 className="text-2xl font-bold mb-2">
-                            Get in Touch
-                        </h3>
+                    <div className="bg-white rounded-2xl shadow-xl p-8 border">
+                        <h3 className="text-2xl font-bold mb-2">Get in Touch</h3>
                         <p className="text-gray-600 mb-6 text-sm">
-                            Ready to transform your compliance management? Fill
-                            out the form below.
+                            Ready to transform your compliance management? Fill out the form below.
                         </p>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <input
                                     type="text"
-                                    name="name"
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
                                     placeholder="First name"
                                     className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                     required
@@ -157,6 +170,8 @@ const ManufacturingLanding = () => {
                                 <input
                                     type="text"
                                     name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
                                     placeholder="Last name"
                                     className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                     required
@@ -166,6 +181,8 @@ const ManufacturingLanding = () => {
                             <input
                                 type="email"
                                 name="email"
+                                value={formData.email}
+                                onChange={handleChange}
                                 placeholder="Your email"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                 required
@@ -174,6 +191,8 @@ const ManufacturingLanding = () => {
                             <input
                                 type="tel"
                                 name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
                                 placeholder="Phone number"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                 required
@@ -182,6 +201,8 @@ const ManufacturingLanding = () => {
                             <input
                                 type="text"
                                 name="company"
+                                value={formData.company}
+                                onChange={handleChange}
                                 placeholder="Company name"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                 required
@@ -189,6 +210,8 @@ const ManufacturingLanding = () => {
 
                             <select
                                 name="fleetSize"
+                                value={formData.fleetSize}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-gray-600"
                                 required
                             >
@@ -201,18 +224,14 @@ const ManufacturingLanding = () => {
 
                             <select
                                 name="challenge"
+                                value={formData.challenge}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-gray-600"
                                 required
                             >
-                                <option value="">
-                                    Primary compliance challenge
-                                </option>
-                                <option value="document-management">
-                                    Document Management
-                                </option>
-                                <option value="expiring-alerts">
-                                    Expiring Document Alerts
-                                </option>
+                                <option value="">Primary compliance challenge</option>
+                                <option value="document-management">Document Management</option>
+                                <option value="expiring-alerts">Expiring Document Alerts</option>
                                 <option value="integration">Integration</option>
                                 <option value="audit">Audit Preparation</option>
                                 <option value="other">Other</option>
@@ -220,12 +239,12 @@ const ManufacturingLanding = () => {
 
                             <select
                                 name="currentMethod"
+                                value={formData.currentMethod}
+                                onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-gray-600"
                                 required
                             >
-                                <option value="">
-                                    Current compliance management method
-                                </option>
+                                <option value="">Current compliance management method</option>
                                 <option value="manual">Manual</option>
                                 <option value="software">Software-Based</option>
                                 <option value="outsourced">Outsourced</option>
@@ -234,24 +253,18 @@ const ManufacturingLanding = () => {
 
                             <button
                                 type="submit"
-                                className="w-full bg-blue-500 text-white py-3 rounded-xl hover:bg-blue-600 transition-colors font-medium border-none"
+                                className="w-full bg-blue-500 text-white py-3 rounded-xl hover:bg-blue-600 transition-colors font-medium"
                             >
                                 Submit
                             </button>
 
                             <p className="text-xs text-gray-500 text-center">
                                 By contacting us, you agree to our{" "}
-                                <a
-                                    href="#"
-                                    className="text-blue-500 hover:underline"
-                                >
+                                <a href="#" className="text-blue-500 hover:underline">
                                     Terms of Service
                                 </a>{" "}
                                 and{" "}
-                                <a
-                                    href="#"
-                                    className="text-blue-500 hover:underline"
-                                >
+                                <a href="#" className="text-blue-500 hover:underline">
                                     Privacy Policy
                                 </a>
                             </p>
