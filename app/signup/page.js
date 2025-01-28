@@ -632,22 +632,7 @@ const Page = () => {
                 {/* Step 5: Payment Details */}
                 {step === 5 && (
                   <div className="p-2 h-full flex flex-col items-center justify-center">
-                    <p className="mt-4 font-thin text-2xl sm:text-3xl font-sans">
-                      You&apos;re all Set!
-                    </p>
-                    <div className="bg-blue-400 w-20 h-1 rounded-xl !mt-4 !mb-2"></div>
-                    <p className="text-sm text-default-foreground mt-10">
-                      Congratulations! Your registration is complete.
-                    </p>
-                    <p className="text-sm text-default-foreground mb-10">
-                      You will be redirected to the dashboard shortly.
-                    </p>
-                    <div className="!mt-24">
-                      <Spinner
-                        size="lg"
-                        classNames={{ wrapper: "w-24 h-24" }}
-                      />
-                    </div>
+                    
                     {/* Redirect to the dashboard after a delay */}
                     <RedirectToDashboard />
                   </div>
@@ -700,8 +685,8 @@ const RedirectToDashboard = () => {
   useEffect(() => {
     // Redirect to the dashboard after 3 seconds (adjust as needed)
     const delay = setTimeout(() => {
-      router.push("/");
-    }, 3500);
+      router.push("/success");
+    }, 10);
 
     // Clear the timeout on component unmount (cleanup)
     return () => clearTimeout(delay);

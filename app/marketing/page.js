@@ -1,17 +1,20 @@
+"use client";
 import React from "react";
-import ManufacturingLanding from "../components/marketing1";
-import BenefitsSection from "../components/marketing2";
-import ContactForm from "../components/contactus";
-import CTASection from "../components/CTA";
+import Navigation from "../components/Navigation";
+import HeroSection from "../components/HeroSection";
+import ServicesSection from "../components/ServicesSection";
+import BenefitsSection from "../components/BenefitsSection";
+import ContactForm from "../components/ContactForm";
 
 const Marketing = () => {
   return (
-    <>
-      <ManufacturingLanding />
+    <div className="min-h-screen bg-white">
+      <Navigation />
+      <HeroSection />
+      <ServicesSection />
       <BenefitsSection />
-      {/* <ContactForm /> */}
-      <CTASection />
-    </>
+      <ContactForm />
+    </div>
   );
 };
 
