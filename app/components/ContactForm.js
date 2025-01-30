@@ -65,7 +65,7 @@ const ContactForm = () => {
     };
 
     return (
-        <section className="bg-gradient-to-b from-blue-100 via-blue-100 to-blue-50 py-20 relative overflow-hidden">
+        <section id="contact-section" className="bg-gradient-to-b from-blue-100 via-blue-100 to-blue-50 py-20 relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-200 rounded-full blur-3xl opacity-30" />
@@ -226,7 +226,7 @@ const ContactForm = () => {
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg
-                                        transition-all duration-200 flex items-center justify-center gap-2 mt-6"
+                                        transition-all duration-200 flex items-center justify-center gap-2 !mt-6"
                             >
                                 Submit Request
                                 <Send className="w-4 h-4" />

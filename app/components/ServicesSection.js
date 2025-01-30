@@ -15,19 +15,19 @@ const ServicesSection = () => {
             title: "Centralized Compliance Hub",
             description: "Keep all your critical documents in one place for quick and easy access.",
             icon: "📊",
-            color: "cyan"
+            color: "blue"
         },
         {
             title: "Real-Time Alerts",
             description: "Stay proactive with 30-day advance notifications for expiring documents and deadlines.",
             icon: "⚡",
-            color: "sky"
+            color: "blue"
         },
         {
             title: "Seamless Integration",
             description: "Effortlessly connect with your current systems, including ELDs, TMS, and HR platforms.",
             icon: "🔄",
-            color: "indigo"
+            color: "blue"
         },
         {
             title: "Audit Readiness",
@@ -39,7 +39,7 @@ const ServicesSection = () => {
             title: "Compliance as a Competitive Edge",
             description: "Turn compliance into a business asset, building trust and reducing risk.",
             icon: "🏆",
-            color: "sky"
+            color: "blue"
         }
     ];
 
