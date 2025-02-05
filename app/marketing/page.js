@@ -5,7 +5,6 @@ import HeroSection from "../components/HeroSection";
 import ServicesSection from "../components/ServicesSection";
 import BenefitsSection from "../components/BenefitsSection";
 import FeaturesSection from "../components/FeaturesSection";
-import ContactForm from "../components/ContactForm";
 
 const Marketing = () => {
   return (
@@ -15,7 +14,6 @@ const Marketing = () => {
       <FeaturesSection />
       <BenefitsSection />
       <ServicesSection />
-      <ContactForm />
     </div>
   );
 };

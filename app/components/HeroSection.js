@@ -1,11 +1,66 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, BarChart3, TruckIcon, X } from "lucide-react";
+import { Star, BarChart3, TruckIcon, X, Send, Play } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    company: '',
+    fleetSize: '',
+  });
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: 'service_bd8xqoi',
+          template_id: 'template_gdv4gzz',
+          user_id: 'moxGesNsHlG4mbFyg',
+          template_params: {
+            to_email: 'omar@optimuspaper.com',
+            from_name: `${formData.firstName} ${formData.lastName}`,
+            from_email: formData.email,
+            message: JSON.stringify(formData, null, 2)
+          }
+        })
+      });
+      
+      if (response.ok) {
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          company: '',
+          fleetSize: '',
+        });
+        router.push('/thankyou');
+      } else {
+        throw new Error('Failed to submit form');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to submit form. Please try again.');
+    }
+  };
 
   const scrollToContact = () => {
     const contactSection = document.querySelector("#contact-section");
@@ -110,39 +165,18 @@ const HeroSection = () => {
                 ahead of deadlines with our intelligent platform.
               </motion.p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="flex flex-wrap gap-4 mb-12"
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsVideoModalOpen(true)}
+                className="bg-white text-blue-800 px-8 py-4 rounded-xl hover:bg-blue-50 
+                          border-2 border-blue-100 hover:border-blue-200 transition-all duration-300 mb-12 flex items-center gap-2"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={scrollToContact}
-                  className="bg-blue-500 text-white px-8 py-4 rounded-xl hover:bg-blue-600 
-                                             transition-all duration-300 flex items-center gap-2"
-                >
-                  Get Started
-                </motion.button>
+                Watch Demo
+                <Play className="w-4 h-4" />
+              </motion.button>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsVideoModalOpen(true)}
-                  className="bg-white text-blue-800 px-8 py-4 rounded-xl hover:bg-blue-50 
-                                             border-2 border-blue-100 hover:border-blue-200 transition-all duration-300"
-                >
-                  Watch Demo
-                </motion.button>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="flex items-center gap-6 text-blue-900"
-              >
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((i) => (
@@ -152,83 +186,132 @@ const HeroSection = () => {
                       />
                     ))}
                   </div>
-                  <span className="text-sm">Join 2,000+ companies</span>
+                  <span className="text-sm text-blue-900">Join 2,000+ companies</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                  <span className="text-sm ml-2">5.0 (85+ reviews)</span>
-                </div>
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  className="w-48 mr-4"
+                >
+                  <Image
+                    src="/LogoOptimusBlue.png"
+                    alt="Optimus Logo"
+                    width={192}
+                    height={48}
+                    priority
+                    className="object-contain w-full h-auto"
+                  />
+                </motion.div>
+              </div>
             </motion.div>
 
-            {/* Right Content - Interactive Dashboard Preview */}
+            {/* Right Content - Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex-1 relative max-w-2xl mx-auto lg:mx-0"
+              className="flex-1 relative max-w-xl w-full mx-auto lg:mx-0"
             >
-              <div className="relative bg-white rounded-2xl shadow-2xl p-4 border border-gray-100">
-                <div className="absolute -top-2 left-1/4 transform -translate-x-1/2 bg-gray-50 px-4 py-1 rounded-full border text-sm text-gray-600 flex items-center gap-2 z-10">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  Live Dashboard
-                </div>
-                <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
-                  <Image
-                    src="/bluetruck.jpg"
-                    fill
-                    alt="Dashboard Preview"
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    priority
-                  />
-                </div>
-
-                {/* Floating Stats Cards */}
-                <motion.div
+              <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+                <motion.div 
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 }}
-                  className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg border border-gray-100 z-10"
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-8"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <TruckIcon className="w-5 h-5 text-green-600" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-600">Active Fleets</div>
-                      <div className="text-xl font-bold text-gray-900">
-                        2,547
-                      </div>
-                    </div>
-                  </div>
+                  <h2 className="text-2xl font-bold text-blue-900 mb-2">
+                    Get Started Today
+                  </h2>
+                  <p className="text-blue-700 text-sm">
+                    Fill out the form below and we&apos;ll get back to you within 24 hours
+                  </p>
                 </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 }}
-                  className="absolute -top-6 right-12 bg-white p-4 rounded-lg shadow-lg border border-gray-100 z-10"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-blue-600" />
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        placeholder="First Name"
+                        className="w-full px-4 py-3 rounded-lg bg-blue-50 border-2 border-transparent 
+                                focus:border-blue-500 focus:bg-white outline-none transition-all"
+                        required
+                      />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-600">
-                        Compliance Rate
-                      </div>
-                      <div className="text-xl font-bold text-gray-900">
-                        99.9%
-                      </div>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        placeholder="Last Name"
+                        className="w-full px-4 py-3 rounded-lg bg-blue-50 border-2 border-transparent 
+                                focus:border-blue-500 focus:bg-white outline-none transition-all"
+                        required
+                      />
                     </div>
                   </div>
-                </motion.div>
+
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Work Email"
+                    className="w-full px-4 py-3 rounded-lg bg-blue-50 border-2 border-transparent 
+                            focus:border-blue-500 focus:bg-white outline-none transition-all"
+                    required
+                  />
+
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Company Name"
+                    className="w-full px-4 py-3 rounded-lg bg-blue-50 border-2 border-transparent 
+                            focus:border-blue-500 focus:bg-white outline-none transition-all"
+                    required
+                  />
+
+                  <select
+                    name="fleetSize"
+                    value={formData.fleetSize}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-blue-50 border-2 border-transparent 
+                            focus:border-blue-500 focus:bg-white outline-none transition-all"
+                    required
+                  >
+                    <option value="">Select Fleet Size</option>
+                    <option value="1-10">1-10 vehicles</option>
+                    <option value="11-50">11-50 vehicles</option>
+                    <option value="51-200">51-200 vehicles</option>
+                    <option value="200+">200+ vehicles</option>
+                  </select>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-lg
+                            transition-all duration-200 flex items-center justify-center gap-2 !mt-6"
+                  >
+                    Get Started
+                    <Send className="w-4 h-4" />
+                  </motion.button>
+                </form>
+
+                <p className="text-xs text-blue-700 text-center mt-4">
+                  By submitting, you agree to our{" "}
+                  <a href="#" className="text-blue-600 hover:underline">Terms</a>
+                  {" "}and{" "}
+                  <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+                </p>
               </div>
             </motion.div>
           </div>
