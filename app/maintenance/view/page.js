@@ -2,13 +2,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
 // Check your component exports - if they're default exports, don't use curly braces
 // If they're named exports, keep the curly braces
-import { InvoiceCards } from "./InvoiceCards";
 import { InvoiceDetailsModal } from "./InvoiceDetailsModal";
 import { InvoiceTable } from "./InvoiceTable";
-import { RecordDetailsModal } from "./RecordDetailsModal";
 import { RecordTable } from "./RecordTable";
 import { Filters } from "./Filters";
 
@@ -16,15 +15,15 @@ import { Filters } from "./Filters";
 import { invoices as sampleInvoices, extractServiceRecords } from "./data";
 
 const Page = () => {
+  const router = useRouter();
+  
   // ---------- STATE ----------
   const [invoices, setInvoices] = useState(sampleInvoices);
   const [serviceRecords, setServiceRecords] = useState(
     extractServiceRecords(sampleInvoices)
   );
   const [activeInvoice, setActiveInvoice] = useState(null);
-  const [activeRecord, setActiveRecord] = useState(null);
   const [viewMode, setViewMode] = useState("invoices"); // 'invoices' or 'records'
-  const [invoiceCardView, setInvoiceCardView] = useState(true); // true for cards, false for table
 
   // Filters state
   const [filterText, setFilterText] = useState("");
@@ -140,18 +139,9 @@ const Page = () => {
     setActiveInvoice(invoice);
   };
 
-  // Record click handler
-  const handleRecordClick = (record) => {
-    setActiveRecord(record);
-  };
-
   // Close details modals
   const closeInvoiceDetails = () => {
     setActiveInvoice(null);
-  };
-
-  const closeRecordDetails = () => {
-    setActiveRecord(null);
   };
 
   // Delete handlers
@@ -219,190 +209,242 @@ const Page = () => {
         (record) => record.id !== id
       );
       setServiceRecords(updatedRecords);
-
-      if (activeRecord && activeRecord.id === id) {
-        setActiveRecord(null);
-      }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6">
-      <header className="bg-white shadow-sm mb-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-blue-800">
-                Fleet Maintenance System
-              </h1>
-            </div>
-            <div className="flex items-center">
-              <span className="text-sm text-gray-500 mr-4">Welcome, Admin</span>
-              <button className="text-sm text-blue-600 hover:text-blue-800">
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-800 border-b-4 border-yellow-400 pb-2">
-            Maintenance Records
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Sidebar */}
+      <div className="w-64 bg-blue-800 text-white flex-shrink-0">
+        <div className="p-4">
+          <h1 className="text-xl font-bold text-white">
+            Fleet Management
           </h1>
-          <div className="flex space-x-2">
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              onClick={() => alert("This would open the new record form")}
-            >
-              + Add New Record
-            </button>
-            <button
-              className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
-              onClick={() => alert("This would export the filtered records")}
-            >
-              Export
-            </button>
-          </div>
         </div>
+        
+        <nav className="mt-8">
+          <div className="px-4 py-2">
+            <div className="text-xs font-semibold text-blue-300 uppercase tracking-wide">
+              Main Menu
+            </div>
+          </div>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm text-blue-100 hover:bg-blue-700">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5v4m8-4v4" />
+            </svg>
+            Dashboard
+          </a>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm bg-blue-900 text-white border-r-4 border-yellow-400">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Maintenance
+          </a>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm text-blue-100 hover:bg-blue-700">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM21 17a2 2 0 11-4 0 2 2 0 014 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0M9 17h1m-1 0a2 2 0 104 0m-1 0h1m6 0a2 2 0 104 0m-1 0h1" />
+            </svg>
+            Fleet
+          </a>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm text-blue-100 hover:bg-blue-700">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z" />
+            </svg>
+            Drivers
+          </a>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm text-blue-100 hover:bg-blue-700">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Reports
+          </a>
+          
+          <div className="px-4 py-2 mt-8">
+            <div className="text-xs font-semibold text-blue-300 uppercase tracking-wide">
+              Settings
+            </div>
+          </div>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm text-blue-100 hover:bg-blue-700">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+            </svg>
+            Users
+          </a>
+          
+          <a href="#" className="flex items-center px-4 py-3 text-sm text-blue-100 hover:bg-blue-700">
+            <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Preferences
+          </a>
+        </nav>
+      </div>
 
-        {/* View Toggle */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <div className="flex justify-center">
-            <div className="inline-flex rounded-md shadow-sm" role="group">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div className="px-6 py-4">
+            <div className="flex justify-between h-8 items-center">
+              <div className="flex items-center">
+                <h1 className="text-xl font-bold text-blue-800">
+                  Fleet Maintenance System
+                </h1>
+              </div>
+              <div className="flex items-center">
+                <span className="text-sm text-gray-500 mr-4">Welcome, Admin</span>
+                <button className="text-sm text-blue-600 hover:text-blue-800">
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="flex-1 p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold text-blue-800 border-b-4 border-yellow-400 pb-2">
+              Maintenance Records
+            </h1>
+            <div className="flex space-x-2">
               <button
-                type="button"
-                className={`px-4 py-2 text-sm font-medium rounded-l-lg focus:z-10 focus:outline-none ${
-                  viewMode === "invoices"
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
-                }`}
-                onClick={() => setViewMode("invoices")}
+                className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={() => router.push('/maintenance/upload')}
               >
-                Invoice View
+                + Add New Invoice
               </button>
               <button
-                type="button"
-                className={`px-4 py-2 text-sm font-medium rounded-r-lg focus:z-10 focus:outline-none ${
-                  viewMode === "records"
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
-                }`}
-                onClick={() => setViewMode("records")}
+                className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                onClick={() => alert("This would export the filtered records")}
               >
-                Record View
+                Export
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Filters */}
-        {Filters && (
-          <Filters
-            filterText={filterText}
-            setFilterText={setFilterText}
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-            selectedVendor={selectedVendor}
-            setSelectedVendor={setSelectedVendor}
-            selectedServiceType={selectedServiceType}
-            setSelectedServiceType={setSelectedServiceType}
-            vendors={vendors}
-            serviceTypes={serviceTypes}
-            resetFilters={resetFilters}
-            viewMode={viewMode}
-            invoiceCardView={invoiceCardView}
-            setInvoiceCardView={setInvoiceCardView}
-          />
-        )}
-
-        {/* Summary Bar */}
-        <div className="bg-blue-50 rounded-lg p-4 mb-6 flex justify-between items-center">
-          <div>
-            <span className="text-sm text-gray-600">
-              {viewMode === "invoices" ? "Invoices Found:" : "Records Found:"}
-            </span>
-            <span className="ml-2 font-semibold">
-              {viewMode === "invoices"
-                ? filteredInvoices.length
-                : filteredRecords.length}
-            </span>
+          {/* View Toggle - More Compact */}
+          <div className="bg-white rounded shadow-sm p-2 mb-3">
+            <div className="flex justify-center">
+              <div className="inline-flex rounded shadow-sm" role="group">
+                <button
+                  type="button"
+                  className={`px-3 py-1.5 text-sm font-medium rounded-l focus:z-10 focus:outline-none ${
+                    viewMode === "invoices"
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setViewMode("invoices")}
+                >
+                  Invoice View
+                </button>
+                <button
+                  type="button"
+                  className={`px-3 py-1.5 text-sm font-medium rounded-r focus:z-10 focus:outline-none ${
+                    viewMode === "records"
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setViewMode("records")}
+                >
+                  Record View
+                </button>
+              </div>
+            </div>
           </div>
-          <div>
-            <span className="text-sm text-gray-600">Total Cost:</span>
-            <span className="ml-2 font-semibold">
-              {formatCurrency(
-                viewMode === "invoices" ? invoicesTotal : recordsTotal
-              )}
-            </span>
-          </div>
-        </div>
 
-        {/* INVOICE VIEW */}
-        {viewMode === "invoices" && (
-          <>
-            {/* Card View */}
-            {invoiceCardView
-              ? InvoiceCards && (
-                  <InvoiceCards
-                    filteredInvoices={filteredInvoices}
-                    handleInvoiceClick={handleInvoiceClick}
-                    handleDeleteInvoice={handleDeleteInvoice}
-                    formatCurrency={formatCurrency}
-                    resetFilters={resetFilters}
-                  />
-                )
-              : InvoiceTable && (
-                  <InvoiceTable
-                    filteredInvoices={filteredInvoices}
-                    handleInvoiceClick={handleInvoiceClick}
-                    handleDeleteInvoice={handleDeleteInvoice}
-                    formatCurrency={formatCurrency}
-                    invoicesTotal={invoicesTotal}
-                  />
+          {/* Filters */}
+          {Filters && (
+            <Filters
+              filterText={filterText}
+              setFilterText={setFilterText}
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+              selectedVendor={selectedVendor}
+              setSelectedVendor={setSelectedVendor}
+              selectedServiceType={selectedServiceType}
+              setSelectedServiceType={setSelectedServiceType}
+              vendors={vendors}
+              serviceTypes={serviceTypes}
+              resetFilters={resetFilters}
+              viewMode={viewMode}
+            />
+          )}
+
+          {/* Summary Bar - More Compact */}
+          <div className="bg-blue-50 rounded p-2 mb-3 flex justify-between items-center text-sm">
+            <div>
+              <span className="text-gray-600">
+                {viewMode === "invoices" ? "Invoices Found:" : "Records Found:"}
+              </span>
+              <span className="ml-2 font-semibold">
+                {viewMode === "invoices"
+                  ? filteredInvoices.length
+                  : filteredRecords.length}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-600">Total Cost:</span>
+              <span className="ml-2 font-semibold">
+                {formatCurrency(
+                  viewMode === "invoices" ? invoicesTotal : recordsTotal
                 )}
-          </>
-        )}
+              </span>
+            </div>
+          </div>
 
-        {/* RECORD VIEW */}
-        {viewMode === "records" && RecordTable && (
-          <RecordTable
-            filteredRecords={filteredRecords}
-            handleRecordClick={handleRecordClick}
-            handleDeleteRecord={handleDeleteRecord}
-            formatCurrency={formatCurrency}
-            recordsTotal={recordsTotal}
-          />
-        )}
+          {/* INVOICE VIEW - Table Only */}
+          {viewMode === "invoices" && InvoiceTable && (
+            <InvoiceTable
+              filteredInvoices={filteredInvoices}
+              handleInvoiceClick={handleInvoiceClick}
+              handleDeleteInvoice={handleDeleteInvoice}
+              formatCurrency={formatCurrency}
+              invoicesTotal={invoicesTotal}
+            />
+          )}
 
-        {/* MODALS */}
-        {activeInvoice && InvoiceDetailsModal && (
-          <InvoiceDetailsModal
-            invoice={activeInvoice}
-            closeModal={closeInvoiceDetails}
-            handleDeleteInvoice={handleDeleteInvoice}
-            formatCurrency={formatCurrency}
-          />
-        )}
+          {/* RECORD VIEW */}
+          {viewMode === "records" && RecordTable && (
+            <RecordTable
+              filteredRecords={filteredRecords}
+              handleDeleteRecord={handleDeleteRecord}
+              formatCurrency={formatCurrency}
+              recordsTotal={recordsTotal}
+              invoices={invoices}
+              handleInvoiceClick={handleInvoiceClick}
+            />
+          )}
 
-        {activeRecord && RecordDetailsModal && (
-          <RecordDetailsModal
-            record={activeRecord}
-            closeModal={closeRecordDetails}
-            handleDeleteRecord={handleDeleteRecord}
-            formatCurrency={formatCurrency}
-          />
-        )}
-      </main>
+          {/* MODALS */}
+          {activeInvoice && InvoiceDetailsModal && (
+            <InvoiceDetailsModal
+              invoice={activeInvoice}
+              closeModal={closeInvoiceDetails}
+              handleDeleteInvoice={handleDeleteInvoice}
+              formatCurrency={formatCurrency}
+            />
+          )}
+        </main>
 
-      <footer className="bg-white shadow-inner mt-8 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-sm text-gray-500 text-center">
-            © 2025 Fleet Maintenance System. All rights reserved.
-          </p>
-        </div>
-      </footer>
+        {/* Footer */}
+        <footer className="bg-white shadow-inner py-4">
+          <div className="px-6">
+            <p className="text-sm text-gray-500 text-center">
+              © 2025 Fleet Maintenance System. All rights reserved.
+            </p>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };

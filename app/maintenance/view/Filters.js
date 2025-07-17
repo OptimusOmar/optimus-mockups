@@ -13,61 +13,52 @@ export const Filters = ({
   vendors,
   serviceTypes,
   resetFilters,
-  viewMode,
-  invoiceCardView,
-  setInvoiceCardView
+  viewMode
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+    <div className="bg-white rounded shadow-sm p-3 mb-3">
+      <div className="grid grid-cols-1 lg:grid-cols-8 gap-2">
+        {/* Search - Narrower, takes 2 columns */}
+        <div className="lg:col-span-2">
+          <label className="block text-xs font-medium text-gray-700 mb-0.5">Search</label>
           <input
             type="text"
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
-            placeholder="Search invoice #, vendor, or service type..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Search invoice #, vendor..."
+            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded"
           />
         </div>
         
+        {/* Start Date - Narrower */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+          <label className="block text-xs font-medium text-gray-700 mb-0.5">Start Date</label>
           <input
             type="date"
             value={dateRange.start}
             onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded"
           />
         </div>
         
+        {/* End Date - Narrower */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+          <label className="block text-xs font-medium text-gray-700 mb-0.5">End Date</label>
           <input
             type="date"
             value={dateRange.end}
             onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded"
           />
         </div>
         
-        <div className="flex items-end">
-          <button
-            onClick={resetFilters}
-            className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-          >
-            Reset Filters
-          </button>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+        {/* Vendor */}
+        <div className="lg:col-span-2">
+          <label className="block text-xs font-medium text-gray-700 mb-0.5">Vendor</label>
           <select
             value={selectedVendor}
             onChange={(e) => setSelectedVendor(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded"
           >
             <option value="">All Vendors</option>
             {vendors.map(vendor => (
@@ -76,12 +67,13 @@ export const Filters = ({
           </select>
         </div>
         
+        {/* Service Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
+          <label className="block text-xs font-medium text-gray-700 mb-0.5">Service Type</label>
           <select
             value={selectedServiceType}
             onChange={(e) => setSelectedServiceType(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded"
           >
             <option value="">All Service Types</option>
             {serviceTypes.map(type => (
@@ -90,24 +82,16 @@ export const Filters = ({
           </select>
         </div>
         
-        {viewMode === 'invoices' && (
-          <div className="flex items-end">
-            <div className="flex w-full space-x-2">
-              <button
-                onClick={() => setInvoiceCardView(true)}
-                className={`flex-1 px-3 py-2 rounded-md ${invoiceCardView ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-              >
-                Card View
-              </button>
-              <button
-                onClick={() => setInvoiceCardView(false)}
-                className={`flex-1 px-3 py-2 rounded-md ${!invoiceCardView ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-              >
-                Table View
-              </button>
-            </div>
-          </div>
-        )}
+        {/* Reset Filters Button - Moved to end */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-0.5">&nbsp;</label>
+          <button
+            onClick={resetFilters}
+            className="w-full px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 whitespace-nowrap"
+          >
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   );
