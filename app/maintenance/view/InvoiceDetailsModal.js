@@ -12,6 +12,10 @@ export const InvoiceDetailsModal = ({
     const taxRate = 0.07; // 7% tax
     return service.taxable ? service.cost * taxRate : 0;
   };
+
+  // Tax rate as percentage for display
+  const taxRatePercent = 7; // 7%
+
       return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-auto">
@@ -49,10 +53,6 @@ export const InvoiceDetailsModal = ({
                   <p className="text-xs text-gray-500">Mileage</p>
                   <p className="font-medium">{invoice.mileage.toLocaleString()}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500">Total Cost</p>
-                  <p className="font-medium text-blue-600">{formatCurrency(invoice.totalCost)}</p>
-                </div>
               </div>
             </div>
             
@@ -84,54 +84,48 @@ export const InvoiceDetailsModal = ({
           {/* Services List */}
           <div className="mb-4">
             <h3 className="text-base font-medium mb-2 pb-1 border-b border-gray-200">Services</h3>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {invoice.services.map((service, index) => {
                 const tax = calculateServiceTax(service);
                 const total = service.cost + tax;
                 return (
-                  <div key={service.id} className="bg-gray-50 rounded-lg p-3">
-                    <div className="flex justify-between items-center mb-2">
+                  <div key={service.id} className="bg-gray-50 rounded p-2">
+                    <div className="flex justify-between items-center mb-1">
                       <h4 className="text-sm font-medium flex items-center">
-                        <span className="flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-medium rounded-full mr-2">
+                        <span className="flex items-center justify-center w-4 h-4 bg-blue-500 text-white text-xs font-medium rounded-full mr-2">
                           {index + 1}
                         </span>
                         {service.serviceType}
                       </h4>
                       <div className="text-right">
                         <div className="text-sm font-semibold text-blue-600">{formatCurrency(total)}</div>
-                        <div className="text-xs text-gray-500">
-                          {formatCurrency(service.cost)} + {formatCurrency(tax)} tax
-                        </div>
+                        <div className="text-xs text-gray-500">Total (incl. tax)</div>
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
                       <div>
-                        <p className="text-gray-500">Subtotal</p>
-                        <p className="font-medium">{formatCurrency(service.cost)}</p>
+                        <span className="text-gray-500">Subtotal:</span>
+                        <span className="font-medium ml-1">{formatCurrency(service.cost)}</span>
                       </div>
                       <div>
-                        <p className="text-gray-500">Tax ({service.taxable ? '7%' : '0%'})</p>
-                        <p className="font-medium">{formatCurrency(tax)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500">Forms</p>
-                        <div className="flex mt-0.5">
+                        <span className="text-gray-500">Forms:</span>
+                        <div className="inline-flex ml-1">
                           {service.parts && (
-                            <span className="px-1.5 py-0.5 rounded text-xs bg-green-100 text-green-800 mr-1">Parts</span>
+                            <span className="px-1 py-0.5 rounded text-xs bg-green-100 text-green-800 mr-1">Parts</span>
                           )}
                           {service.labor && (
-                            <span className="px-1.5 py-0.5 rounded text-xs bg-green-100 text-green-800">Labor</span>
+                            <span className="px-1 py-0.5 rounded text-xs bg-green-100 text-green-800">Labor</span>
                           )}
                         </div>
                       </div>
                       {service.hasWarranty && (
                         <div>
-                          <p className="text-gray-500">Warranty</p>
-                          <div className="mt-0.5">
-                            <span className="px-1.5 py-0.5 rounded text-xs bg-blue-100 text-blue-800">Active</span>
+                          <span className="text-gray-500">Warranty:</span>
+                          <div className="inline-flex ml-1">
+                            <span className="px-1 py-0.5 rounded text-xs bg-blue-100 text-blue-800">Active</span>
                             {service.warrantyDate && (
-                              <p className="text-xs mt-1">Until {service.warrantyDate}</p>
+                              <span className="text-xs ml-1">Until {service.warrantyDate}</span>
                             )}
                           </div>
                         </div>
@@ -140,6 +134,20 @@ export const InvoiceDetailsModal = ({
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Invoice Summary */}
+          <div className="bg-blue-50 rounded px-2 py-3 mb-4">
+            <div className="flex justify-between items-center text-xs">
+              <div>
+                <span className="text-gray-600">Tax Rate: </span>
+                <span className="font-semibold">{taxRatePercent}%</span>
+              </div>
+              <div className="text-right">
+                <span className="text-gray-600 mr-2">Total:</span>
+                <span className="font-bold text-blue-600">{formatCurrency(invoice.totalCost)}</span>
+              </div>
             </div>
           </div>
           
